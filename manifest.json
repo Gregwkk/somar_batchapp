@@ -1,0 +1,39 @@
+{
+  "batch": {
+    "processes": [
+      {
+        "name": "somar_batch_app",
+        "algorithmName": "main",
+        "namespace": "",
+        "algorithmTitle": {
+          "pt-br": "ETL",
+          "en-US": "ETL"
+        },
+        "algorithmDescription": {
+          "pt-br": "Extrai FTP da Somar, trata para um df único e carrega na Carol",
+          "en-US": "Extract from Somar's FTP, build a single dataframe with the data and load it into Carol"
+        },
+        "instanceProperties": {
+          "profile": "",
+          "properties": {
+            "dockerImage": "dashboard/somar_batch_app:1.0.0",
+            "flavor": "c1.nano"
+          },
+          "environments": {
+          }
+        }
+      }
+    ]
+  },
+  "docker": [
+    {
+      "dockerName": "somar_batch_app",
+      "dockerTag": "1.0.0",
+      "gitBranch": "master",
+      "gitPath": "/",
+      "instanceType": "c1.nano",
+      "gitDockerfileName": "Dockerfile", 
+      "gitRepoUrl": "https://github.com/Gregwkk/cofco_somar_batchapp"
+    }
+  ]
+}
