@@ -67,30 +67,30 @@ with zipfile.ZipFile('noble_prev_csv.zip', 'r') as f:
 
 df['data'] = df['data'].apply(lambda data: datetime.strptime(data+'/'+str(datetime.today().year),'%d/%b/%Y'))
 
-# Tira Argentina e Paraguai
+# Tira Argentina e Paraguai e Barra de Camaratuba
 df = df[~df["cidade_estado"].str.contains('AR', na=False)]
 df = df[~df["cidade_estado"].str.contains('PY', na=False)]
+df = df[df.cidade_estado != 'BarradeCamaratuba-PB']
 
-# df = df.head(20)
+# df.to_csv('df2.csv',encoding='utf-8', index=False)
+# # df = df.head(20)
 # # Coloca espaço entre os nomes das cidades
 df['cidade_estado'] = df['cidade_estado'].apply(lambda cidade_estado: re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 ',cidade_estado))
-
 # #Fuzzy Matching (Levenshtein) no nome da cidade
+
 listaDeCidades = cidades()
 
 cities = pd.DataFrame(df.cidade_estado.dropna().unique(), columns=['cidade_estado'])
-# cities = pd.read_csv("cities.csv")
+# # cities = pd.read_csv("cities.csv")
 
 cities['cidade_estado_corrigido'] = cities['cidade_estado'].apply(lambda cidade_estado: process.extractOne(cidade_estado, listaDeCidades,scorer=fuzz.ratio)[0])
-
-
 
 cities['geopoint'] = cities['cidade_estado_corrigido'].apply(lambda cidade_estado_corrigido: getLatLong(cidade_estado_corrigido))
 # cities.to_csv('cities.csv',encoding='utf-8', index=False)
 
 
 df = pd.merge(df,cities,how='left',on='cidade_estado')
-# df = pd.read_csv("df.csv")
+# # df = pd.read_csv("df.csv")
 # df.to_csv('df.csv',encoding='utf-8', index=False)
 
 
@@ -101,7 +101,3 @@ staging = Staging(login)
 staging.send_data(staging_name='meteorologia', data=df, step_size=500,
                 connector_id='16d21d5cb6034dd4b846dc43d1c543e5', print_stats=True)
 print(datetime.now())
-
-
-
-
