@@ -18,23 +18,6 @@ load_dotenv(".env") #this will import these env variables to your execution.
 
 print(datetime.now())
 
-# def getLatLong(location):
-
-#     def isCity(object):
-#         allowed = ['city', 'village','neighbourhood']
-#         return object['components']['_type'] in allowed
-       
-    
-#     URL = 'https://api.opencagedata.com/geocode/v1/json'
-#     APIkey = '2768333f0136406c95c3f0de385370c7'
-#     PARAMS = {'q':location, 'key':APIkey}
-#     data = requests.get(url = URL, params = PARAMS).json()['results']
-#     data = list(filter(isCity, data))
-#     lat = data[0]['geometry']['lat']
-#     lng = data[0]['geometry']['lng']
-#     geopoint = str(lat)+','+str(lng)
-#     return geopoint
-
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 #locale.setlocale(locale.LC_ALL, "Portuguese_Brazil.1252")
 
