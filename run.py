@@ -80,12 +80,12 @@ df['cidade_estado'] = df['cidade_estado'].apply(lambda cidade_estado: re.sub(r'(
 
 listaDeCidades = cidades()
 
-cities = pd.DataFrame(df.cidade_estado.dropna().unique(), columns=['cidade_estado'])
-# # cities = pd.read_csv("cities.csv")
+# cities = pd.DataFrame(df.cidade_estado.dropna().unique(), columns=['cidade_estado'])
+cities = pd.read_csv("cities.csv")
 
-cities['cidade_estado_corrigido'] = cities['cidade_estado'].apply(lambda cidade_estado: process.extractOne(cidade_estado, listaDeCidades,scorer=fuzz.ratio)[0])
+# cities['cidade_estado_corrigido'] = cities['cidade_estado'].apply(lambda cidade_estado: process.extractOne(cidade_estado, listaDeCidades,scorer=fuzz.ratio)[0])
 
-cities['geopoint'] = cities['cidade_estado_corrigido'].apply(lambda cidade_estado_corrigido: getLatLong(cidade_estado_corrigido))
+# cities['geopoint'] = cities['cidade_estado_corrigido'].apply(lambda cidade_estado_corrigido: getLatLong(cidade_estado_corrigido))
 # cities.to_csv('cities.csv',encoding='utf-8', index=False)
 
 
@@ -94,7 +94,7 @@ df = pd.merge(df,cities,how='left',on='cidade_estado')
 # df.to_csv('df.csv',encoding='utf-8', index=False)
 
 
-# print(df)
+print(df) 
 
 login = Carol()
 staging = Staging(login)
