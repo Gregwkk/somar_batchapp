@@ -18,6 +18,23 @@ load_dotenv(".env") #this will import these env variables to your execution.
 
 print(datetime.now())
 
+def getLatLong(location):
+
+    def isCity(object):
+        allowed = ['city', 'village','neighbourhood']
+        return object['components']['_type'] in allowed
+       
+    
+    URL = 'https://api.opencagedata.com/geocode/v1/json'
+    APIkey = '2768333f0136406c95c3f0de385370c7'
+    PARAMS = {'q':location, 'key':APIkey}
+    data = requests.get(url = URL, params = PARAMS).json()['results']
+    data = list(filter(isCity, data))
+    lat = data[0]['geometry']['lat']
+    lng = data[0]['geometry']['lng']
+    geopoint = str(lat)+','+str(lng)
+    return geopoint
+
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 #locale.setlocale(locale.LC_ALL, "Portuguese_Brazil.1252")
 
@@ -63,12 +80,12 @@ df['cidade_estado'] = df['cidade_estado'].apply(lambda cidade_estado: re.sub(r'(
 
 listaDeCidades = cidades()
 
-# cities = pd.DataFrame(df.cidade_estado.dropna().unique(), columns=['cidade_estado'])
-cities = pd.read_csv("cities.csv")
+cities = pd.DataFrame(df.cidade_estado.dropna().unique(), columns=['cidade_estado'])
+# cities = pd.read_csv("cities.csv")
 
-# cities['cidade_estado_corrigido'] = cities['cidade_estado'].apply(lambda cidade_estado: process.extractOne(cidade_estado, listaDeCidades,scorer=fuzz.ratio)[0])
+cities['cidade_estado_corrigido'] = cities['cidade_estado'].apply(lambda cidade_estado: process.extractOne(cidade_estado, listaDeCidades,scorer=fuzz.ratio)[0])
 
-# cities['geopoint'] = cities['cidade_estado_corrigido'].apply(lambda cidade_estado_corrigido: getLatLong(cidade_estado_corrigido))
+cities['geopoint'] = cities['cidade_estado_corrigido'].apply(lambda cidade_estado_corrigido: getLatLong(cidade_estado_corrigido))
 # cities.to_csv('cities.csv',encoding='utf-8', index=False)
 
 
