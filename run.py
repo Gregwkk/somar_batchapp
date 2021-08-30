@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 from cidade import cidades
 from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) ##remover notificação de URL insegura
+
 
 load_dotenv(".env") #this will import these env variables to your execution.
 
@@ -21,15 +24,17 @@ print(datetime.now())
 def getLatLong(location):
 
     def isCity(object):
-        allowed = ['city', 'village','neighbourhood']
+        allowed = ['city', 'village','neighbourhood', 'road']
+
         return object['components']['_type'] in allowed
        
     
     URL = 'https://api.opencagedata.com/geocode/v1/json'
     APIkey = '2768333f0136406c95c3f0de385370c7'
     PARAMS = {'q':location, 'key':APIkey}
-    data = requests.get(url = URL, params = PARAMS).json()['results']
-    data = list(filter(isCity, data))
+    # print(location) 
+    data = requests.get(url = URL, params = PARAMS, verify=False).json()['results']
+    # data = list(filter(isCity, data)) ##Desabilitado pois quando é incluído uma categoria nova o app trava
     lat = data[0]['geometry']['lat']
     lng = data[0]['geometry']['lng']
     geopoint = str(lat)+','+str(lng)
@@ -90,7 +95,7 @@ cities['geopoint'] = cities['cidade_estado_corrigido'].apply(lambda cidade_estad
 
 
 df = pd.merge(df,cities,how='left',on='cidade_estado')
-# # df = pd.read_csv("df.csv")
+# df = pd.read_csv("df.csv")
 # df.to_csv('df.csv',encoding='utf-8', index=False)
 
 
